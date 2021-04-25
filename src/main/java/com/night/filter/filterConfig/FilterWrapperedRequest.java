@@ -5,6 +5,7 @@ import com.night.filter.Constants;
 import com.night.filter.util.AESUntil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.bcel.Const;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -21,17 +22,20 @@ public class FilterWrapperedRequest extends HttpServletRequestWrapper {
     private     HttpServletRequest req = null;
 
     private String encoding = "utf-8";
+
+
     /**
-     * Constructs a request object wrapping the given request.
-     *
-     * @param request The request to wrap
-     * @throws IllegalArgumentException if the request is null
-     */
+    * 实现功能描述： 获取请求信息 解密
+    * @Author: zhengjingyun
+    * @Date: 2021/4/16
+    * @param
+    * @return
+    */
     public FilterWrapperedRequest(HttpServletRequest request) throws Exception {
         super(request);
         String data = getBodyString(request);
         log.info("request data origin --- >{}",data);
-        if(null != data){
+        if(!StringUtils.isEmpty(data)){
             data = AESUntil.decrypt(Constants.aesPassword, JSONObject.parseObject(data).getString("data"));
             log.info("request data decry --- >{}",data);
             this.requestBody = data;
@@ -47,21 +51,24 @@ public class FilterWrapperedRequest extends HttpServletRequestWrapper {
                     requestBody.getBytes(req.getCharacterEncoding()));
             @Override
             public int read() throws IOException {
+//                log.info("request read");
                 return in.read();
             }
             @Override
             public boolean isFinished() {
-                // TODO Auto-generated method stub
+//                log.info("request isFinished");
+
                 return false;
             }
             @Override
             public boolean isReady() {
-                // TODO Auto-generated method stub
+//                log.info("request isReady");
+
                 return false;
             }
             @Override
             public void setReadListener(ReadListener readListener) {
-                // TODO Auto-generated method stub
+//                log.info("request setReadListener");
 
             }
         };
@@ -69,7 +76,7 @@ public class FilterWrapperedRequest extends HttpServletRequestWrapper {
 
 
     /**
-     * 获取请求Body
+     * 从流中获取请求Body
      *
      * @param request
      * @return

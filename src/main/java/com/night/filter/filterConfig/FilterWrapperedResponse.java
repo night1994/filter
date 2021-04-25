@@ -55,7 +55,14 @@ public class FilterWrapperedResponse extends HttpServletResponseWrapper {
         return buffer.toByteArray();
     }
 
-    /** 内部类，对ServletOutputStream进行包装 */
+
+    /**
+    * 实现功能描述：内部类，对ServletOutputStream进行包 接收实际返回流
+    * @Author: zhengjingyun
+    * @Date: 2021/4/16
+    * @param
+    * @return
+    */
     private class WapperedOutputStream extends ServletOutputStream {
         private ByteArrayOutputStream bos = null;
 

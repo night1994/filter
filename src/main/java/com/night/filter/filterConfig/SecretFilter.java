@@ -5,6 +5,7 @@ import com.night.filter.Constants;
 import com.night.filter.util.AESUntil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -45,6 +46,9 @@ public class SecretFilter  implements Filter {
     private void writerWrapper(FilterWrapperedResponse resp) throws Exception {
 
         String res = new String(resp.getResponseData());
+        if(StringUtils.isEmpty(res)){
+            return;
+        }
         JSONObject jsonObject = JSONObject.parseObject(res);
         String data = jsonObject.getString("data");
         data = AESUntil.encrypt2Java(Constants.aesPassword,data);
